@@ -119,7 +119,7 @@ const slidesData = [
         {/* Left Column: Video Demo */}
         <div className="lg:col-span-4 flex flex-col">
           <div className="rounded-2xl overflow-hidden border-2 border-pnc-cyan shadow-[0_0_30px_rgba(99,223,221,0.2)] bg-black/40 backdrop-blur-sm w-full h-[350px] lg:h-full min-h-[350px] relative">
-            <AutoPlayVideo src="/PNC_Food_app_202604202031.mp4" className="absolute inset-0 w-full h-full object-cover" />
+            <AutoPlayVideo src={`${import.meta.env.BASE_URL}PNC_Food_app_202604202031.mp4`} className="absolute inset-0 w-full h-full object-cover" />
           </div>
         </div>
 
@@ -230,12 +230,12 @@ const slidesData = [
     content: () => (
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 mt-4 md:mt-8 relative z-10 w-full max-w-5xl mx-auto">
         {[
-          { name: 'الشيف فاطمة أبو حاتي', show: 'برنامج العزومة', img: '/fatma.jpeg' },
-          { name: 'الشيف نونا', show: 'برنامج البلدي يوكل', img: '/nona.jpg' },
-          { name: 'الشيف وحيد كمال', show: 'برنامج الفطاطري', img: '/wahid.jpg' },
-          { name: 'الشيف آلاء الجبالي', show: 'برنامج سنة أولى طبخ', img: '/alaa.jpg' },
-          { name: 'الشيف دعاء السمنودي', show: 'برنامج سر الصنعة', img: '/doaa.jpg' },
-          { name: 'الشيف محمد حامد', show: 'برنامج المطعم', img: '/mohamed.jpg' }
+          { name: 'الشيف فاطمة أبو حاتي', show: 'برنامج العزومة', img: `${import.meta.env.BASE_URL}fatma.jpeg` },
+          { name: 'الشيف نونا', show: 'برنامج البلدي يوكل', img: `${import.meta.env.BASE_URL}nona.jpg` },
+          { name: 'الشيف وحيد كمال', show: 'برنامج الفطاطري', img: `${import.meta.env.BASE_URL}wahid.jpg` },
+          { name: 'الشيف آلاء الجبالي', show: 'برنامج سنة أولى طبخ', img: `${import.meta.env.BASE_URL}alaa.jpg` },
+          { name: 'الشيف دعاء السمنودي', show: 'برنامج سر الصنعة', img: `${import.meta.env.BASE_URL}doaa.jpg` },
+          { name: 'الشيف محمد حامد', show: 'برنامج المطعم', img: `${import.meta.env.BASE_URL}mohamed.jpg` }
         ].map((chef, i) => (
           <div key={i} className="group relative overflow-hidden rounded-xl md:rounded-2xl aspect-[4/5] border-2 border-slate-700/80 shadow-lg hover:border-pnc-cyan hover:shadow-[0_0_20px_rgba(38,144,137,0.4)] transition-all duration-300">
             <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" style={{ backgroundImage: `url(${chef.img})` }} />
@@ -548,7 +548,7 @@ export default function App() {
       >
         <div className="flex items-center gap-4">
           <div className="w-16 h-16 md:w-20 md:h-20 rounded-xl overflow-hidden flex items-center justify-center bg-white/5 backdrop-blur-sm shadow-[0_0_20px_rgba(38,144,137,0.3)] border border-white/10">
-            <img src="/logo.png" alt="PNC Food Hub" className="w-[85%] h-[85%] object-contain drop-shadow-md" />
+            <img src={`${import.meta.env.BASE_URL}logo.png`} alt="PNC Food Hub" className="w-[85%] h-[85%] object-contain drop-shadow-md" />
           </div>
           <div>
             <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-pnc-cyan to-pnc-teal leading-tight drop-shadow-sm">PNC</h1>
