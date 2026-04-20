@@ -178,16 +178,16 @@ const slidesData = [
     eyebrow: "نجوم الطبخ",
     title: "محتوانا يعتمد على نجوم يثق فيهم الجمهور وينتظرهم يومياً",
     lead: "خبرة في كل المجالات بلمسة الشيفات اللي الجمهور حافظ أسمائهم وبيثق فيهم",
-    image: "/fatma.jpeg",
+    image: "/fatma.jpimage: `${import.meta.env.BASE_URL}fatma.jpeg`eg",
     content: () => (
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 mt-4 md:mt-8 relative z-10 w-full max-w-5xl mx-auto">
         {[
-          { name: 'الشيف فاطمة أبو حاتي', show: 'برنامج العزومة', img: '/fatma.jpeg' },
-          { name: 'الشيف نونا', show: 'برنامج البلدي يوكل', img: '/nona.jpg' },
-          { name: 'الشيف وحيد كمال', show: 'برنامج الفطاطري', img: '/wahid.jpg' },
-          { name: 'الشيف آلاء الجبالي', show: 'برنامج سنة أولى طبخ', img: '/alaa.jpg' },
-          { name: 'الشيف دعاء السمنودي', show: 'برنامج سر الصنعة', img: '/doaa.jpg' },
-          { name: 'الشيف محمد حامد', show: 'برنامج المطعم', img: '/mohamed.jpg' }
+          { name: 'الشيف فاطمة أبو حاتي', show: 'برنامج العزومة', img: `${import.meta.env.BASE_URL}fatma.jpeg` },
+          { name: 'الشيف نونا', show: 'برنامج البلدي يوكل', img: `${import.meta.env.BASE_URL}nona.jpg` },
+          { name: 'الشيف وحيد كمال', show: 'برنامج الفطاطري', img: `${import.meta.env.BASE_URL}wahid.jpg` },
+          { name: 'الشيف آلاء الجبالي', show: 'برنامج سنة أولى طبخ', img: `${import.meta.env.BASE_URL}alaa.jpg` },
+          { name: 'الشيف دعاء السمنودي', show: 'برنامج سر الصنعة', img: `${import.meta.env.BASE_URL}doaa.jpg` },
+          { name: 'الشيف محمد حامد', show: 'برنامج المطعم', img: `${import.meta.env.BASE_URL}mohamed.jpg` }
         ].map((chef, i) => (
           <div key={i} className="group relative overflow-hidden rounded-xl md:rounded-2xl aspect-[4/5] border-2 border-slate-700/80 shadow-lg hover:border-pnc-cyan hover:shadow-[0_0_20px_rgba(38,144,137,0.4)] transition-all duration-300">
             <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" style={{ backgroundImage: `url(${chef.img})` }} />
