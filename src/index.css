@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+@theme {
+  --color-pnc-teal: #269089;
+  --color-pnc-cyan: #63DFDD;
+  --color-pnc-orange: #FEBF03;
+  --color-pnc-yellow: #FED304;
+
+  --font-sans: "Cairo", sans-serif;
+}
+
+body {
+  @apply bg-slate-950 text-white font-sans overflow-hidden antialiased;
+}
