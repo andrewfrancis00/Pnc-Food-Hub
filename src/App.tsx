@@ -10,7 +10,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ChevronRight, ChevronLeft, Utensils, Presentation } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Utensils, Presentation, Play } from 'lucide-react';
 
 // --- Reusable UI Components for Slides ---
 const Card = ({ children, className = "" }: { children: React.ReactNode, className?: string }) => (
@@ -56,74 +56,122 @@ const StepFlow = ({ steps }: { steps: {k:string, t:string, x:string}[] }) => (
   </div>
 );
 
+const AutoPlayVideo = ({ src, className }: { src: string, className?: string }) => {
+  const videoRef = React.useRef<HTMLVideoElement>(null);
+  const [isPlaying, setIsPlaying] = React.useState(false);
+  
+  const tryPlay = React.useCallback(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.muted = true;
+    v.defaultMuted = true;
+    v.play().then(() => {
+      setIsPlaying(true);
+    }).catch((e) => {
+      console.warn("Autoplay blocked, showing fallback play button:", e);
+      setIsPlaying(false);
+    });
+  }, []);
+
+  React.useEffect(() => {
+    tryPlay();
+    const interval = setInterval(() => {
+      if (!isPlaying) tryPlay();
+    }, 2000);
+    return () => clearInterval(interval);
+  }, [tryPlay, isPlaying]);
+
+  return (
+    <div className={`relative ${className} w-full h-full`}>
+      <video
+        ref={videoRef}
+        src={src}
+        className="absolute inset-0 w-full h-full object-cover"
+        loop
+        muted
+        playsInline
+        autoPlay
+      />
+      {!isPlaying && (
+        <div 
+          className="absolute inset-0 flex items-center justify-center bg-black/60 cursor-pointer z-10 transition-opacity hover:bg-black/40"
+          onClick={tryPlay}
+        >
+          <div className="w-16 h-16 bg-pnc-cyan rounded-full flex items-center justify-center text-slate-900 shadow-[0_0_20px_rgba(99,223,221,0.5)]">
+            <Play className="w-8 h-8 ml-1" />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
 // --- Slide Content Data ---
 const slidesData = [
   {
     id: 1,
-    eyebrow: "المميزات الأساسية والفكرة الكبيرة",
-    title: "مش عايزين نعمل App وصفات وخلاص…<br/>عايزين نعمل <span class='text-pnc-yellow drop-shadow-[0_0_15px_rgba(254,191,3,0.5)]'>بيت رقمي يومي ومجتمع متكامل</span>",
-    lead: "الفكرة إننا نحول قوة قناة PNC Food من مجرد مشاهدة على المنصات إلى منصة حية ومباشرة بتقدم خدمات وfeatures فريدة ومبتكرة تناسب استخدامات ست البيت اليومية.",
+    eyebrow: "ثورة في تجربة المشاهدة",
+    title: "تخيل إن شيفك المفضل بيرد عليك بنفسه!<br/><span class='text-pnc-yellow drop-shadow-[0_0_15px_rgba(254,191,3,0.5)]'>أول منصة تفاعلية مدعومة بالـ AI</span>",
+    lead: "المنصة مش مجرد App وصفات، الـ Main Feature هي أحدث AI Agent يخلي الجمهور يتواصل مع الشيف بحيادية، وبتقنية بتحول PNC Food لأصل استراتيجي يومي.",
     image: "https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?q=80&w=2070&auto=format&fit=crop",
     content: () => (
-      <>
-        {/* Features Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
-          <Card className="!p-5 border-t-2 border-t-pnc-cyan">
-            <h3 className="text-xl font-bold text-white mb-3 flex items-center gap-2">
-              <div className="w-7 h-7 flex-shrink-0 rounded-full bg-pnc-cyan/20 flex items-center justify-center text-pnc-cyan text-sm">1</div> 
-              أحدث AI Agent للشيفات
-            </h3>
-            <p className="text-slate-300 text-sm leading-relaxed">كل شيف الناس هتعرف توصله وتتكلم معاه، وهيرد عليهم زيه بالظبط وبنفس أسلوبه ووصفاته المعتمدة، من خلال أحدث تقنيات الـ AI agent في السوق.</p>
-          </Card>
-          <Card className="!p-5 border-t-2 border-t-pnc-yellow">
-            <h3 className="text-xl font-bold text-white mb-3 flex items-center gap-2">
-              <div className="w-7 h-7 flex-shrink-0 rounded-full bg-pnc-yellow/20 flex items-center justify-center text-pnc-yellow text-sm">2</div> 
-              متجر رقمي شامل
-            </h3>
-            <p className="text-slate-300 text-sm leading-relaxed">متجر رقمي متكامل يجمع كل منتجاتنا. عشان يكون البيع مباشر والمستخدم يوصل لكل الإضافات والمستلزمات في مكان واحد.</p>
-          </Card>
-          <Card className="!p-5 border-t-2 border-t-pnc-orange">
-            <h3 className="text-xl font-bold text-white mb-3 flex items-center gap-2">
-              <div className="w-7 h-7 flex-shrink-0 rounded-full bg-pnc-orange/20 flex items-center justify-center text-pnc-orange text-sm">3</div> 
-              إشعارات مسابقات وحلقات
-            </h3>
-            <p className="text-slate-300 text-sm leading-relaxed">نظام إشعارات (Push Notifications) يوصل لكل المستخدمين بأحدث المسابقات المحفزة، أوقات الحلقات، وأهم الأخبار بشكل فوري.</p>
-          </Card>
-          <Card className="!p-5 border-t-2 border-t-pnc-teal">
-            <h3 className="text-xl font-bold text-white mb-3 flex items-center gap-2">
-              <div className="w-7 h-7 flex-shrink-0 rounded-full bg-pnc-teal/20 flex items-center justify-center text-pnc-teal text-sm">4</div> 
-              مرجع لكل ست بيت
-            </h3>
-            <p className="text-slate-300 text-sm leading-relaxed">المنصة مش أكل بس! معاها وصفات شرب، ونصايح دينية وحياتية للمنزل، وجروبات مجتمعية للستات يسألوا و يتكلموا فيها مع بعض.</p>
-          </Card>
-        </div>
-
-        {/* Board Message / Existing */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-          <Card>
-            <h3 className="text-xl md:text-2xl font-bold text-white mb-4">الرسالة الأساسية للـ Board</h3>
-            <p className="text-slate-300 text-base md:text-lg mb-6 leading-relaxed">
-              المشروع ده مش “تكلفة إضافية” بقدر ما هو <b className="text-pnc-cyan">أصل استراتيجي</b> يخلي القناة تملك جزء أكبر من الجمهور، وترجع تستخدم مكتبة المحتوى بشكل أذكى، وتفتح باب رعايات وتجارب تجارية جديدة.
-            </p>
-            <div className="flex gap-2 flex-wrap">
-              {['Owned Audience', 'Retention أعلى', 'بيانات مباشرة', 'فرص رعاية جديدة'].map((b, i) => (
-                <span key={i} className="bg-white/10 border border-white/10 px-3 py-1.5 rounded-full text-xs md:text-sm font-medium text-white">{b}</span>
-              ))}
-            </div>
-          </Card>
-          <div className="flex flex-col gap-4">
-            <Card className="flex-1 !p-5 border-l-4 border-l-slate-500">
-              <div className="text-2xl font-bold text-white mb-2">من قناة</div>
-              <p className="text-slate-400 text-sm md:text-base">بتوصل للناس وقت الحلقة أو وقت الفيديو</p>
-            </Card>
-            <Card className="flex-1 !p-5 border-l-4 border-l-pnc-teal bg-pnc-teal/10">
-              <div className="text-2xl font-bold text-pnc-cyan mb-2">إلى منصة</div>
-              <p className="text-slate-200 text-sm md:text-base">الجمهور يفتحها طول الأسبوع، بيلاقي مجتمع، بيتسوق، ويتفاعل</p>
-            </Card>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-6">
+        {/* Left Column: Video Demo */}
+        <div className="lg:col-span-4 flex flex-col">
+          <div className="rounded-2xl overflow-hidden border-2 border-pnc-cyan shadow-[0_0_30px_rgba(99,223,221,0.2)] bg-black/40 backdrop-blur-sm w-full h-[350px] lg:h-full min-h-[350px] relative">
+            <AutoPlayVideo src="/PNC_Food_app_202604202031.mp4" className="absolute inset-0 w-full h-full object-cover" />
           </div>
         </div>
-        <Quote>لو نجحنا في الخطوة دي، PNC Food هتبقى <span className="text-pnc-yellow">أقرب للجمهور من أي وقت</span>، ومش هتبقى معتمدة بالكامل على خوارزميات المنصات الخارجية.</Quote>
-      </>
+
+        {/* Right Column: AI Feature + Other Features */}
+        <div className="lg:col-span-8 flex flex-col justify-center gap-5">
+          {/* Main Feature Highlight */}
+          <Card className="!p-5 border-t-4 border-t-pnc-cyan bg-gradient-to-l from-pnc-cyan/20 to-transparent">
+            <h3 className="text-xl md:text-2xl font-bold text-white mb-3 flex items-center gap-3">
+              <div className="w-9 h-9 flex-shrink-0 rounded-full bg-pnc-cyan text-slate-900 flex items-center justify-center font-extrabold shadow-sm">1</div> 
+              أحدث AI Agent للشيفات بالأسواق
+            </h3>
+            <p className="text-slate-100 text-sm md:text-base leading-relaxed">
+              كل شيف الناس هتعرف توصله وتتكلم معاه، وهيرد عليهم زيه بالظبط وبنفس أسلوبه ووصفاته المعتمدة، من خلال أحدث تقنيات الـ AI agent الموجودة في السوق.
+            </p>
+          </Card>
+
+          {/* Sub Features */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <Card className="!p-4 border-t-2 border-t-pnc-yellow">
+              <h3 className="text-sm md:text-base font-bold text-white mb-2 flex items-center gap-2">
+                <div className="w-6 h-6 flex-shrink-0 rounded-full bg-pnc-yellow/20 flex items-center justify-center text-pnc-yellow text-xs">2</div> 
+                متجر رقمي شامل
+              </h3>
+              <p className="text-slate-300 text-xs md:text-sm leading-relaxed">
+                لكل منتجاتنا لتسهيل البيع المباشر وضمان وصول المستخدم لكل الإضافات والمستلزمات في مكان واحد.
+              </p>
+            </Card>
+            <Card className="!p-4 border-t-2 border-t-pnc-orange">
+              <h3 className="text-sm md:text-base font-bold text-white mb-2 flex items-center gap-2">
+                <div className="w-6 h-6 flex-shrink-0 rounded-full bg-pnc-orange/20 flex items-center justify-center text-pnc-orange text-xs">3</div> 
+                إشعارات فورية
+              </h3>
+              <p className="text-slate-300 text-xs md:text-sm leading-relaxed">
+                لكل المستخدمين بأحدث المسابقات المحفزة، أوقات الحلقات، وأهم المستجدات بصورة مستمرة.
+              </p>
+            </Card>
+            <Card className="!p-4 border-t-2 border-t-pnc-teal">
+              <h3 className="text-sm md:text-base font-bold text-white mb-2 flex items-center gap-2">
+                <div className="w-6 h-6 flex-shrink-0 rounded-full bg-pnc-teal/20 flex items-center justify-center text-pnc-teal text-xs">4</div> 
+                مرجع ومجتمع متكامل
+              </h3>
+              <p className="text-slate-300 text-xs md:text-sm leading-relaxed">
+                مرجع لكل ست بيت للوصفات والنصايح الدينية، بالإضافة لجروبات بيتكلموا ويستفادوا فيها مع بعض.
+              </p>
+            </Card>
+          </div>
+
+          <Quote>
+            بنطور حضورنا <span className="text-pnc-cyan font-extrabold pb-0.5 border-b-2 border-pnc-cyan">من قناة</span> بتوصل للمشاهد وقت الحلقة، إلى <span className="text-pnc-yellow font-extrabold pb-0.5 border-b-2 border-pnc-yellow">مجتمع ومنصة حية</span> شغالة طول الأسبوع معتمدة على Owned Audience.
+          </Quote>
+        </div>
+      </div>
     )
   },
   {
@@ -178,16 +226,16 @@ const slidesData = [
     eyebrow: "نجوم الطبخ",
     title: "محتوانا يعتمد على نجوم يثق فيهم الجمهور وينتظرهم يومياً",
     lead: "خبرة في كل المجالات بلمسة الشيفات اللي الجمهور حافظ أسمائهم وبيثق فيهم",
-    image: "/fatma.jpimage: `${import.meta.env.BASE_URL}fatma.jpeg`eg",
+    image: "/fatma.jpeg",
     content: () => (
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 mt-4 md:mt-8 relative z-10 w-full max-w-5xl mx-auto">
         {[
-          { name: 'الشيف فاطمة أبو حاتي', show: 'برنامج العزومة', img: `${import.meta.env.BASE_URL}fatma.jpeg` },
-          { name: 'الشيف نونا', show: 'برنامج البلدي يوكل', img: `${import.meta.env.BASE_URL}nona.jpg` },
-          { name: 'الشيف وحيد كمال', show: 'برنامج الفطاطري', img: `${import.meta.env.BASE_URL}wahid.jpg` },
-          { name: 'الشيف آلاء الجبالي', show: 'برنامج سنة أولى طبخ', img: `${import.meta.env.BASE_URL}alaa.jpg` },
-          { name: 'الشيف دعاء السمنودي', show: 'برنامج سر الصنعة', img: `${import.meta.env.BASE_URL}doaa.jpg` },
-          { name: 'الشيف محمد حامد', show: 'برنامج المطعم', img: `${import.meta.env.BASE_URL}mohamed.jpg` }
+          { name: 'الشيف فاطمة أبو حاتي', show: 'برنامج العزومة', img: '/fatma.jpeg' },
+          { name: 'الشيف نونا', show: 'برنامج البلدي يوكل', img: '/nona.jpg' },
+          { name: 'الشيف وحيد كمال', show: 'برنامج الفطاطري', img: '/wahid.jpg' },
+          { name: 'الشيف آلاء الجبالي', show: 'برنامج سنة أولى طبخ', img: '/alaa.jpg' },
+          { name: 'الشيف دعاء السمنودي', show: 'برنامج سر الصنعة', img: '/doaa.jpg' },
+          { name: 'الشيف محمد حامد', show: 'برنامج المطعم', img: '/mohamed.jpg' }
         ].map((chef, i) => (
           <div key={i} className="group relative overflow-hidden rounded-xl md:rounded-2xl aspect-[4/5] border-2 border-slate-700/80 shadow-lg hover:border-pnc-cyan hover:shadow-[0_0_20px_rgba(38,144,137,0.4)] transition-all duration-300">
             <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" style={{ backgroundImage: `url(${chef.img})` }} />
